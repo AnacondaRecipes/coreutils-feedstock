@@ -18,6 +18,8 @@ requirements:
   build:
     - {{ compiler('c') }}
     - make
+  host:
+    - libiconv  # [osx]
 
 test:
   commands:
