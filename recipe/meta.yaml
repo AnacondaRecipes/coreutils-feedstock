@@ -9,6 +9,9 @@ package:
 source:
   url: http://ftp.gnu.org/gnu/{{ name }}/{{ name  }}-{{ version }}.tar.xz
   sha256: {{ sha256 }}
+  patches:
+    # This patch allows for the system to work on aarch64 systems
+    - coreutils-getdents64.patch  # [linux]
 
 build:
   number: 0
@@ -18,6 +21,8 @@ requirements:
   build:
     - {{ compiler('c') }}
     - make
+    - binutils  # Help run on aarch64 systems
+
   host:
     - libiconv  # [osx]
 
