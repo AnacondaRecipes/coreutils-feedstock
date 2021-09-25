@@ -1,6 +1,6 @@
 {% set name = "coreutils" %}
-{% set version = "8.32" %}
-{% set sha256 = "4458d8de7849df44ccab15e16b1548b285224dbba5f08fac070c1c0e0bcc4cfa" %}
+{% set version = "9.0" %}
+{% set sha256 = "ce30acdf4a41bc5bb30dd955e9eaa75fa216b4e3deb08889ed32433c7b3b97ce" %}
 
 package:
   name: {{ name|lower }}
