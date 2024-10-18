@@ -7,7 +7,7 @@ package:
   version: {{ version }}
 
 source:
-  url: http://ftp.gnu.org/gnu/{{ name }}/{{ name  }}-{{ version }}.tar.xz
+  url: https://ftp.gnu.org/gnu/{{ name }}/{{ name  }}-{{ version }}.tar.xz
   sha256: {{ sha256 }}
 
 build:
@@ -36,7 +36,7 @@ about:
   summary: 'The GNU Core Utilities are the basic file, shell and text manipulation utilities of the GNU operating system.'
 
   doc_url: https://www.gnu.org/software/coreutils/manual/html_node/index.html
-  dev_url: http://git.savannah.gnu.org/cgit/coreutils.git
+  dev_url: https://git.savannah.gnu.org/cgit/coreutils.git
 
 extra:
   recipe-maintainers:
