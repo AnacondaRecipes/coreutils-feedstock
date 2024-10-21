@@ -1,13 +1,13 @@
 {% set name = "coreutils" %}
-{% set version = "8.32" %}
-{% set sha256 = "4458d8de7849df44ccab15e16b1548b285224dbba5f08fac070c1c0e0bcc4cfa" %}
+{% set version = "9.5" %}
+{% set sha256 = "cd328edeac92f6a665de9f323c93b712af1858bc2e0d88f3f7100469470a1b8a" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: http://ftp.gnu.org/gnu/{{ name }}/{{ name  }}-{{ version }}.tar.xz
+  url: https://ftp.gnu.org/gnu/{{ name }}/{{ name  }}-{{ version }}.tar.xz
   sha256: {{ sha256 }}
 
 build:
@@ -36,7 +36,7 @@ about:
   summary: 'The GNU Core Utilities are the basic file, shell and text manipulation utilities of the GNU operating system.'
 
   doc_url: https://www.gnu.org/software/coreutils/manual/html_node/index.html
-  dev_url: http://git.savannah.gnu.org/cgit/coreutils.git
+  dev_url: https://git.savannah.gnu.org/cgit/coreutils.git
 
 extra:
   recipe-maintainers:
