@@ -1,50 +1,129 @@
 #!/usr/bin/env bash
-# set -euo pipefail
+set -euo pipefail
 
 export LC_ALL=C
 
-# ============ setup ============
-if [[ -z "${PREFIX:-}" ]]; then
-  echo "WARNING: \$PREFIX is not set; falling back to \$(dirname \$(which bash))/.."
-  PREFIX="$(dirname "$(which bash)")/.."
+# ---- setup ----
+if [ -z "${PREFIX:-}" ]; then
+  echo "WARNING: \$PREFIX is not set; using \$(dirname \$(which sh))/.."
+  PREFIX="$(dirname "$(which sh)")/.."
 fi
 BIN_DIR="$PREFIX/bin"
 
-read -r -d '' ALL_UTILS <<'EOF' || true
-[
-b2sum, base32, base64, basename, basenc, cat, chcon, chgrp, chmod, chown, chroot,
-cksum, comm, cp, csplit, cut, date, dd, df, dir, dircolors, dirname, du, echo, env,
-expand, expr, factor, false, fmt, fold, groups, head, hostid, id, install, join, kill,
-link, ln, logname, ls, md5sum, mkdir, mkfifo, mknod, mktemp, mv, nice, nl, nohup, nproc,
-numfmt, od, paste, pathchk, pinky, pr, printenv, printf, ptx, pwd, readlink, realpath,
-rm, rmdir, runcon, seq, sha1sum, sha224sum, sha256sum, sha384sum, sha512sum, shred,
-shuf, sleep, sort, split, stat, stdbuf, stty, sum, sync, tac, tail, tee, test, timeout,
-touch, tr, true, truncate, tsort, tty, uname, unexpand, uniq, unlink, uptime, vdir, wc,
-who, whoami, yes, users
-]
-EOF
+UTIL_LIST='
+b2sum
+base32
+base64
+basename
+basenc
+cat
+chcon
+chgrp
+chmod
+chown
+chroot
+cksum
+comm
+cp
+csplit
+cut
+date
+dd
+df
+dir
+dircolors
+dirname
+du
+echo
+env
+expand
+expr
+factor
+false
+fmt
+fold
+groups
+head
+hostid
+id
+install
+join
+kill
+link
+ln
+logname
+ls
+md5sum
+mkdir
+mkfifo
+mknod
+mktemp
+mv
+nice
+nl
+nohup
+nproc
+numfmt
+od
+paste
+pathchk
+pinky
+pr
+printenv
+printf
+ptx
+pwd
+readlink
+realpath
+rm
+rmdir
+runcon
+seq
+sha1sum
+sha224sum
+sha256sum
+sha384sum
+sha512sum
+shred
+shuf
+sleep
+sort
+split
+stat
+stdbuf
+stty
+sum
+sync
+tac
+tail
+tee
+test
+timeout
+touch
+tr
+true
+truncate
+tsort
+tty
+uname
+unexpand
+uniq
+unlink
+uptime
+vdir
+wc
+who
+whoami
+yes
+users
+'
 
-CLEANED="$(printf '%s\n' "$ALL_UTILS" \
-  | tr -d "[],'" \
-  | tr -s ' \t\n' '\n' \
-  | sed '/^[[:space:]]*$/d')"
-
-ALL_UTILS=()
-while IFS= read -r u; do
-  [[ -n "$u" ]] && ALL_UTILS+=("$u")
-done <<< "$CLEANED"
-
-printf '%s\n' "${ALL_UTILS[@]}"
-
+# ---- helpers (POSIX) ----
 run_version_or_help() {
-  local exe="$1"
-  if "$exe" --version >/dev/null 2>&1; then
-    return 0
-  elif "$exe" --help >/dev/null 2>&1; then
-    return 0
-  else
-    "$exe" >/dev/null 2>&1 || return 1
-  fi
+  exe=$1
+  "$exe" --version >/dev/null 2>&1 && return 0
+  "$exe" --help    >/dev/null 2>&1 && return 0
+  "$exe"           >/dev/null 2>&1 || return 1
 }
 
 PASS=0
@@ -52,22 +131,24 @@ MISS=0
 FAIL=0
 
 echo "== Smoke check of all coreutils in $BIN_DIR =="
-for u in "${ALL_UTILS[@]}"; do
-  exe="$BIN_DIR/${u}"
-  if [[ -x "$exe" ]]; then
+while IFS= read -r u; do
+  [ -n "$u" ] || continue
+  exe="$BIN_DIR/$u"
+  if [ -x "$exe" ]; then
     if run_version_or_help "$exe"; then
-      printf "  [OK]   %s\n" "${u}"
-      ((PASS++))
+      printf "  [OK]   %s\n" "$u"
+      PASS=$((PASS+1))
     else
-      printf "  [FAIL] %s (exited non-zero)\n" "${u}"
-      ((FAIL++))
+      printf "  [FAIL] %s (exited non-zero)\n" "$u"
+      FAIL=$((FAIL+1))
     fi
   else
-    printf "  [MISS] %s (not found)\n" "${u}"
-    ((MISS++))
-    continue
+    printf "  [MISS] %s (not found)\n" "$u"
+    MISS=$((MISS+1))
   fi
-done
+done <<EOF
+$UTIL_LIST
+EOF
 
 echo "== Summary: PASS=$PASS, FAIL=$FAIL, MISS=$MISS =="
 
