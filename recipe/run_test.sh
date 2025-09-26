@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# set -euo pipefail
 
 export LC_ALL=C
 
@@ -24,10 +24,17 @@ who, whoami, yes, users
 ]
 EOF
 
-ALL_UTILS=($(printf '%s\n' "$ALL_UTILS" \
+CLEANED="$(printf '%s\n' "$ALL_UTILS" \
   | tr -d "[],'" \
   | tr -s ' \t\n' '\n' \
-  | grep -v '^[[:space:]]*$'))
+  | sed '/^[[:space:]]*$/d')"
+
+ALL_UTILS=()
+while IFS= read -r u; do
+  [[ -n "$u" ]] && ALL_UTILS+=("$u")
+done <<< "$CLEANED"
+
+printf '%s\n' "${ALL_UTILS[@]}"
 
 run_version_or_help() {
   local exe="$1"
