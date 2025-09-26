@@ -22,13 +22,8 @@ requirements:
   host:
     - libiconv {{ libiconv }}  # [osx]
 
-test:
-  requires:
-    - bash
-  files:
-    - run_test.sh
-  commands:
-    - bash run_test.sh
+# Tests running implicitly by 
+# recipe/run_test.sh
 
 about:
   home: https://www.gnu.org/software/coreutils
