@@ -24,7 +24,10 @@ who, whoami, yes, users
 ]
 EOF
 
-ALL_UTILS=($(printf '%s\n' "$ALL_UTILS" | tr -d '[],' | tr -s ' \t\n' '\n' | grep -v '^\s*$'))
+ALL_UTILS=($(printf '%s\n' "$ALL_UTILS" \
+  | tr -d "[],'" \
+  | tr -s ' \t\n' '\n' \
+  | grep -v '^[[:space:]]*$'))
 
 run_version_or_help() {
   local exe="$1"
