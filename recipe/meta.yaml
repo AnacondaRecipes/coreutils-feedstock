@@ -20,7 +20,7 @@ requirements:
     - make
     - libtool
   host:
-    - libiconv  # [osx]
+    - libiconv {{ libiconv }}  # [osx]
 
 test:
   requires:
